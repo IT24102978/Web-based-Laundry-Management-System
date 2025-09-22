@@ -5,6 +5,6 @@
     <title>Welcome to Spring Boot with JSP</title>
 </head>
 <body>
-<h1>Hello, this is the TEST JSP page!</h1>
+<h1>Hello, this is a JSP page!</h1>
 </body>
 </html>

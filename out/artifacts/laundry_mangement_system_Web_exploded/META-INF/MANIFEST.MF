@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: Chandupa Weerakkody
+Build-Jdk: Oracle OpenJDK 23.0.2
+Implementation-Title: Laundry Management System Backend
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.laundry_mangement_system
+Main-Class: ${start-class}
+
