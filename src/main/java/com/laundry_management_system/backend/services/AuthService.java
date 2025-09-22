@@ -9,14 +9,11 @@ import java.util.Optional;
 @Service
 public class AuthService {
     private final UserAccountRepository repo;
-
-    public AuthService(UserAccountRepository repo) {
-        this.repo = repo;
-    }
+    public AuthService(UserAccountRepository repo) { this.repo = repo; }
 
     public Optional<UserAccount> authenticate(String username, String rawPassword) {
         return repo.findByUsername(username)
-                .filter(UserAccount::isActive)   // ✅ only allow active accounts
-                .filter(u -> rawPassword.equals(u.getPassword())); // ✅ plain-text compare
+                .filter(UserAccount::isActive)
+                .filter(u -> rawPassword.equals(u.getPasswordHash())); // (replace with real hash check later)
     }
 }
