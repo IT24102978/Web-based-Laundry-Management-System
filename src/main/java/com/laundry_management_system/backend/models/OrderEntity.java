@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "Order", schema = "dbo")   // Hibernate will quote it
+@Table(name = "[Order]", schema = "dbo")   // Hibernate will quote it
 public class OrderEntity {
 
     @Id

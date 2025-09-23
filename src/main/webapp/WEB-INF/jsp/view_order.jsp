@@ -1,54 +1,34 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
-<head><title>Order #${order.orderId}</title></head>
+<head><title>View Order</title></head>
 <body>
-<h1>Order #${order.orderId}</h1>
+<h2>Order #${order.orderId}</h2>
 
-<p><b>Customer:</b> ${order.customerId}</p>
-<p><b>Status:</b> ${order.status}</p>
-
-<p><b>Order Date:</b>
-    <fmt:formatDate value="${order.orderDate}" pattern="yyyy-MM-dd HH:mm"/>
-</p>
-
-<p><b>Pickup:</b>
-    <c:if test="${order.pickupDate != null}">
-        <fmt:formatDate value="${order.pickupDate}" pattern="yyyy-MM-dd HH:mm"/>
-    </c:if>
-</p>
-
-<p><b>Delivery:</b>
-    <c:if test="${order.deliveryDate != null}">
-        <fmt:formatDate value="${order.deliveryDate}" pattern="yyyy-MM-dd HH:mm"/>
-    </c:if>
-</p>
-
-<p><b>Instructions:</b> <c:out value="${order.instructions}"/></p>
+<p><strong>Customer:</strong> ${order.customerId}</p>
+<p><strong>Status:</strong> ${order.status}</p>
+<p><strong>Order Date:</strong> ${order.orderDate}</p>
+<p><strong>Pickup:</strong> ${order.pickupDate}</p>
+<p><strong>Delivery:</strong> ${order.deliveryDate}</p>
+<p><strong>Instructions:</strong> ${order.instructions}</p>
 
 <h3>Items</h3>
-<table border="1" cellpadding="6">
+<table border="1">
     <tr>
         <th>Service Item ID</th>
         <th>Qty</th>
         <th>Price</th>
     </tr>
-    <c:forEach items="${order.items}" var="it">
+    <c:forEach var="item" items="${order.items}">
         <tr>
-            <td>${it.serviceItemId}</td>
-            <td>${it.quantity}</td>
-            <td>${it.price}</td>
+            <td>${item.serviceItemId}</td>
+            <td>${item.quantity}</td>
+            <td>${item.price}</td>
         </tr>
     </c:forEach>
-    <c:if test="${empty order.items}">
-        <tr><td colspan="3">No items</td></tr>
-    </c:if>
 </table>
 
-<p>
-    <a href="/orders/${order.orderId}/edit">Edit</a> |
-    <a href="/orders">Back</a>
-</p>
+<a href="/orders/${order.orderId}/edit">Edit</a> |
+<a href="/orders">Back</a>
 </body>
 </html>
