@@ -13,7 +13,6 @@ public class AuthService {
 
     public Optional<UserAccount> authenticate(String username, String rawPassword) {
         return repo.findByUsername(username)
-                .filter(UserAccount::isActive)
-                .filter(u -> rawPassword.equals(u.getPasswordHash())); // (replace with real hash check later)
+                .filter(u -> rawPassword.equals(u.getPasswordHash())); // or getPassword()
     }
 }

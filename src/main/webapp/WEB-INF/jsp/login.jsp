@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaundryPro - Management System Login</title>
+    <title>EcoWash - Login</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -216,8 +216,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 9.172V5L8 4z"/>
             </svg>
         </div>
-        <h1 class="heading-font text-3xl font-bold mb-2" style="color: var(--foreground)">LaundryPro</h1>
-        <p class="text-sm" style="color: var(--muted-foreground)">Professional Laundry Management System</p>
+        <h1 class="heading-font text-3xl font-bold mb-2" style="color: var(--foreground)">EcoWash</h1>
+        <p class="text-sm" style="color: var(--muted-foreground)">Powered by LMS PRO</p>
     </div>
 
     <c:if test="${error}">
@@ -301,14 +301,26 @@
                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
                     </svg>
-                    Sign In to LaundryPro
+                    Login to EcoWash
                 </span>
         </button>
+
+        <a href="${pageContext.request.contextPath}/signup"
+           class="primary-btn w-full py-3 px-4 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-offset-2 block text-center"
+           style="focus:ring-color: var(--ring)">
+    <span class="flex items-center justify-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 4v16m8-8H4"/>
+        </svg>
+        Not a member? Sign up
+    </span>
+        </a>
     </form>
 
     <div class="mt-8 text-center">
         <p class="text-xs" style="color: var(--muted-foreground)">
-            © 2024 LaundryPro Management System. All rights reserved.
+            © 2025 EcoWash / LMS PRO. All rights reserved.
         </p>
         <div class="mt-2 flex justify-center space-x-4 text-xs" style="color: var(--muted-foreground)">
             <a href="#" class="transition-colors" style="color: var(--muted-foreground)" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--muted-foreground)'">Privacy Policy</a>

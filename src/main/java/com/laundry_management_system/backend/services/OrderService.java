@@ -5,6 +5,8 @@ import com.laundry_management_system.backend.models.OrderItem;
 import com.laundry_management_system.backend.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
 
 import java.util.List;
 
@@ -25,4 +27,7 @@ public class OrderService {
 
     @Transactional
     public void delete(Integer id){ orders.deleteById(id); }
+
 }
+
+

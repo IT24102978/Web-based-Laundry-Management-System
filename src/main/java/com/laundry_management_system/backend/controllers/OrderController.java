@@ -1,6 +1,8 @@
 package com.laundry_management_system.backend.controllers;
 
+import com.laundry_management_system.backend.models.Customer;
 import com.laundry_management_system.backend.models.OrderEntity;
+import com.laundry_management_system.backend.repositories.CustomerRepository;
 import com.laundry_management_system.backend.repositories.OrderRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
@@ -8,51 +10,75 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/orders")
 public class OrderController {
 
     private final OrderRepository orders;
+    private final CustomerRepository customers;
 
-    public OrderController(OrderRepository orders) {
+    public OrderController(OrderRepository orders, CustomerRepository customers) {
         this.orders = orders;
+        this.customers = customers;
     }
 
-    /** LIST + inline create form lives in order.jsp */
+    /** Build list like ["C001","C002",...] for dropdowns */
+    private List<String> customerUsernames() {
+        return customers.findAllByOrderByUserAccount_UsernameAsc()
+                .stream()
+                .map(c -> c.getUserAccount().getUsername())
+                .toList();
+    }
+
+    /** LIST page (with inline create form on order.jsp) */
     @GetMapping
     public String list(Model model) {
         model.addAttribute("orders", orders.findAll());
-        model.addAttribute("newOrder", new OrderEntity()); // for inline create form
-        return "order"; // ✅ matches /WEB-INF/jsp/order.jsp
+        model.addAttribute("newOrder", new OrderEntity()); // inline create form
+        model.addAttribute("customerUsernames", customerUsernames());
+        return "order";
     }
 
-    /** CREATE (inline form post from /order.jsp page) */
+    /** CREATE from inline form on /orders */
     @PostMapping
     @Transactional
     public String create(@ModelAttribute("newOrder") OrderEntity newOrder,
+                         @RequestParam(value = "customerUsername", required = false) String customerUsername,
                          RedirectAttributes ra) {
+
+        if (customerUsername != null && !customerUsername.isBlank()) {
+            Customer c = customers.findByUserAccount_Username(customerUsername)
+                    .orElseThrow(() -> new IllegalArgumentException("Unknown customer username: " + customerUsername));
+            newOrder.setCustomerId(c.getCustomerId());
+        }
+
         orders.save(newOrder);
         ra.addFlashAttribute("msg", "Order #" + newOrder.getOrderId() + " created.");
         return "redirect:/orders";
     }
 
-    /** VIEW single */
+    /** VIEW single order */
     @GetMapping("/{id}")
     public String view(@PathVariable int id, Model model) {
         OrderEntity order = orders.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
         model.addAttribute("order", order);
-        return "view_order"; // ✅ matches /WEB-INF/jsp/view_order.jsp
+        return "view_order";
     }
 
-    /** EDIT form page (reuses order_form.jsp) */
+    /** EDIT page (uses order_form.jsp) */
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable int id, Model model) {
         OrderEntity order = orders.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
         model.addAttribute("order", order);
         model.addAttribute("mode", "edit");
-        return "order_form"; // ✅ matches /WEB-INF/jsp/order_form.jsp
+        model.addAttribute("customerUsernames", customerUsernames());
+        return "order_form";
     }
 
     /** UPDATE */
@@ -60,11 +86,20 @@ public class OrderController {
     @Transactional
     public String update(@PathVariable int id,
                          @ModelAttribute("order") OrderEntity fromForm,
+                         @RequestParam(value = "customerUsername", required = false) String customerUsername,
                          RedirectAttributes ra) {
+
         OrderEntity existing = orders.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + id));
 
-        existing.setCustomerId(fromForm.getCustomerId());
+        if (customerUsername != null && !customerUsername.isBlank()) {
+            Customer c = customers.findByUserAccount_Username(customerUsername)
+                    .orElseThrow(() -> new IllegalArgumentException("Unknown customer username: " + customerUsername));
+            existing.setCustomerId(c.getCustomerId());
+        } else {
+            existing.setCustomerId(fromForm.getCustomerId()); // fallback if numeric id is posted
+        }
+
         existing.setStatus(fromForm.getStatus());
         existing.setOrderDate(fromForm.getOrderDate());
         existing.setPickupDate(fromForm.getPickupDate());
@@ -76,7 +111,16 @@ public class OrderController {
         return "redirect:/orders/" + id;
     }
 
-    /** DELETE (posted from order.jsp row form) */
+    /** CREATE page (dedicated) */
+    @GetMapping("/new")
+    public String newForm(Model model) {
+        model.addAttribute("order", new OrderEntity());
+        model.addAttribute("mode", "create");
+        model.addAttribute("customerUsernames", customerUsernames());
+        return "order_form";
+    }
+
+    /** DELETE */
     @PostMapping("/{id}/delete")
     @Transactional
     public String delete(@PathVariable int id, RedirectAttributes ra) {
@@ -89,11 +133,15 @@ public class OrderController {
         return "redirect:/orders";
     }
 
-    /** CREATE page (dedicated page if not inline) */
-    @GetMapping("/new")
-    public String newForm(Model model) {
-        model.addAttribute("order", new OrderEntity());
-        model.addAttribute("mode", "create");
-        return "order_form"; // ✅ matches /WEB-INF/jsp/order_form.jsp
+    @ModelAttribute("idToUsername")
+    public Map<Integer, String> idToUsername() {
+        return customers.findAll().stream()
+                .filter(c -> c.getUserAccount() != null)
+                .collect(Collectors.toMap(
+                        Customer::getCustomerId,
+                        c -> c.getUserAccount().getUsername()
+                ));
     }
+
+
 }

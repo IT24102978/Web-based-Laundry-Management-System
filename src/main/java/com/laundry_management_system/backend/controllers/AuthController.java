@@ -27,7 +27,7 @@ public class AuthController {
         Optional<UserAccount> user = auth.authenticate(username, password);
         if (user.isPresent()) {
             session.setAttribute("USER", user.get());
-            return "redirect:/order_form";
+            return "redirect:/orders";
         }
         return "redirect:/login?error=1";
     }
