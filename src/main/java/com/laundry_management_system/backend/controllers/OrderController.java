@@ -2,8 +2,10 @@ package com.laundry_management_system.backend.controllers;
 
 import com.laundry_management_system.backend.models.Customer;
 import com.laundry_management_system.backend.models.OrderEntity;
+import com.laundry_management_system.backend.models.UserAccount;
 import com.laundry_management_system.backend.repositories.CustomerRepository;
 import com.laundry_management_system.backend.repositories.OrderRepository;
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,9 +36,18 @@ public class OrderController {
                 .toList();
     }
 
-    /** LIST page (with inline create form on order.jsp) */
+    /** LIST page (with inline create form on order.jsp) - restricted to Admin/Employee */
     @GetMapping
-    public String list(Model model) {
+    public String list(Model model, HttpSession session) {
+        UserAccount user = (UserAccount) session.getAttribute("USER");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        char first = Character.toUpperCase(user.getUsername().charAt(0));
+        if (first != 'A' && first != 'E') {
+            return "redirect:/?notAllowed";
+        }
+
         model.addAttribute("orders", orders.findAll());
         model.addAttribute("newOrder", new OrderEntity()); // inline create form
         model.addAttribute("customerUsernames", customerUsernames());
@@ -133,6 +144,7 @@ public class OrderController {
         return "redirect:/orders";
     }
 
+    /** Map CustomerId → Username for JSP dropdowns */
     @ModelAttribute("idToUsername")
     public Map<Integer, String> idToUsername() {
         return customers.findAll().stream()
@@ -142,6 +154,4 @@ public class OrderController {
                         c -> c.getUserAccount().getUsername()
                 ));
     }
-
-
 }
