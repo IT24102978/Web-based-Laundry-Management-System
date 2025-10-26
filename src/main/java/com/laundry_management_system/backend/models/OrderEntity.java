@@ -28,7 +28,7 @@ public class OrderEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private OrderStatus status = OrderStatus.RECEIVED;
+    private OrderStatus status = OrderStatus.CREATED;
 
     @Column(name = "instructions", length = 800)
     private String instructions;

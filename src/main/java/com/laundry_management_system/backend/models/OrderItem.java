@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "OrderItem", schema = "dbo")
 public class OrderItem {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_item_id")
     private Integer orderItemId;
 
@@ -14,8 +16,10 @@ public class OrderItem {
     @JoinColumn(name = "order_id", nullable = false)
     private OrderEntity order;
 
-    @Column(name = "service_item_id", nullable = false)
-    private Integer serviceItemId;
+    // ✅ Proper foreign key relationship to ServiceItem
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_item_id", nullable = false)
+    private ServiceItem serviceItem;
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
@@ -23,14 +27,18 @@ public class OrderItem {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    // getters/setters
+    // Getters and Setters
     public Integer getOrderItemId() { return orderItemId; }
+
     public OrderEntity getOrder() { return order; }
     public void setOrder(OrderEntity order) { this.order = order; }
-    public Integer getServiceItemId() { return serviceItemId; }
-    public void setServiceItemId(Integer serviceItemId) { this.serviceItemId = serviceItemId; }
+
+    public ServiceItem getServiceItem() { return serviceItem; }
+    public void setServiceItem(ServiceItem serviceItem) { this.serviceItem = serviceItem; }
+
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
+
     public BigDecimal getPrice() { return price; }
     public void setPrice(BigDecimal price) { this.price = price; }
 }

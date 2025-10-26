@@ -13,4 +13,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
     // Fetch all customers sorted by username
     List<Customer> findAllByOrderByUserAccount_UsernameAsc();
+
+
 }
