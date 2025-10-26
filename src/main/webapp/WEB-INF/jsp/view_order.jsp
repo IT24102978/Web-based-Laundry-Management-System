@@ -158,7 +158,7 @@
             <!-- If your property name is different (e.g. orderItems), change items="${order.items}" accordingly -->
             <c:forEach var="item" items="${order.items}">
                 <tr>
-                    <td>${item.serviceItemId}</td>
+                    <td>${item.serviceItem.serviceName}</td> <!-- ✅ fixed -->
                     <td>${item.quantity}</td>
                     <td class="price-cell">$${item.price}</td>
                 </tr>

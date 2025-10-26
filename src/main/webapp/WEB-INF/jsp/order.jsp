@@ -1,16 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html lang="en" class="">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LMS PRO - Order Management</title>
-
-    <!-- Tailwind via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        /* ========== DESIGN TOKENS ========== */
         :root {
             --background: 255 255 255;
             --foreground: 15 23 42;
@@ -60,7 +59,7 @@
             min-height: 100vh;
         }
 
-        /* ========== ENHANCED HEADER ========== */
+        /* ========== HEADER STYLES ========== */
         .header {
             background: rgb(var(--background));
             border-bottom: 1px solid rgb(var(--border));
@@ -92,9 +91,7 @@
             transition: transform 0.2s;
         }
 
-        .logo:hover {
-            transform: translateY(-2px);
-        }
+        .logo:hover { transform: translateY(-2px); }
 
         .logo-icon {
             width: 40px;
@@ -107,26 +104,6 @@
             color: white;
             font-size: 1.5rem;
             box-shadow: var(--shadow);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .nav-link {
-            color: rgb(var(--muted-foreground));
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-            font-size: 0.875rem;
-        }
-
-        .nav-link:hover {
-            color: rgb(var(--foreground));
         }
 
         .header-actions {
@@ -162,7 +139,7 @@
             transform: scale(1.05);
         }
 
-        /* ========== ENHANCED FOOTER ========== */
+        /* ========== FOOTER STYLES ========== */
         .footer {
             background: rgb(var(--foreground));
             color: white;
@@ -172,9 +149,7 @@
             box-shadow: var(--shadow-xl);
         }
 
-        .dark .footer {
-            background: rgb(20 22 26);
-        }
+        .dark .footer { background: rgb(20 22 26); }
 
         .footer-content {
             max-width: 1200px;
@@ -187,18 +162,16 @@
             font-size: 0.875rem;
         }
 
-        .powered-by {
-            opacity: 0.7;
-            font-weight: 500;
-        }
+        .powered-by { opacity: 0.7; font-weight: 500; }
 
-        /* ========== EXISTING STYLES ========== */
+        /* ========== CONTAINER & LAYOUT ========== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
+        /* ========== ALERT STYLES ========== */
         .alert {
             background: rgb(var(--card));
             border: 1px solid rgb(var(--border));
@@ -224,6 +197,7 @@
             flex-shrink: 0;
         }
 
+        /* ========== FORM CARD STYLES ========== */
         .form-card {
             background: rgb(var(--card));
             border: 1px solid rgb(var(--border));
@@ -301,10 +275,9 @@
             transform: translateY(-2px);
         }
 
-        .form-control.wide {
-            grid-column: span 2;
-        }
+        .form-control.wide { grid-column: span 2; }
 
+        /* ========== BUTTON STYLES ========== */
         .btn {
             padding: 1rem 2rem;
             border: none;
@@ -365,10 +338,9 @@
             box-shadow: none;
         }
 
-        .btn-ghost:hover {
-            background: rgb(var(--accent));
-        }
+        .btn-ghost:hover { background: rgb(var(--accent)); }
 
+        /* ========== TABLE CARD STYLES ========== */
         .table-card {
             background: rgb(var(--card));
             border: 1px solid rgb(var(--border));
@@ -390,9 +362,7 @@
             background: linear-gradient(135deg, rgb(var(--primary)) 0%, rgb(var(--accent)) 100%);
         }
 
-        .table-card:hover {
-            transform: translateY(-3px);
-        }
+        .table-card:hover { transform: translateY(-3px); }
 
         .table-header {
             padding: 2rem;
@@ -412,9 +382,7 @@
             gap: 0.75rem;
         }
 
-        .table-container {
-            overflow-x: auto;
-        }
+        .table-container { overflow-x: auto; }
 
         .table {
             width: 100%;
@@ -449,6 +417,7 @@
             box-shadow: var(--shadow);
         }
 
+        /* ========== STATUS BADGE STYLES ========== */
         .status-badge {
             padding: 0.5rem 1rem;
             border-radius: 9999px;
@@ -484,6 +453,7 @@
             color: #dc2626;
         }
 
+        /* ========== ACTION BUTTONS & LINKS ========== */
         .action-buttons {
             display: flex;
             gap: 0.75rem;
@@ -509,6 +479,64 @@
             box-shadow: var(--shadow);
         }
 
+        /* ========== SERVICE ITEM STYLES ========== */
+        .selected-service-item {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .selected-service-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        }
+
+        .service-name {
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 1rem;
+        }
+
+        .service-quantity {
+            color: #475569;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        .remove-service-btn {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-service-btn:hover {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            transform: scale(1.05);
+        }
+
+        .no-services-message {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px dashed #cbd5e1;
+            border-radius: 0.75rem;
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* ========== UTILITY STYLES ========== */
         .loading {
             display: inline-block;
             width: 1rem;
@@ -519,12 +547,12 @@
             animation: spin 1s ease-in-out infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         .fade-in {
             animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         @keyframes fadeIn {
@@ -547,15 +575,11 @@
             animation: pulse 0.3s ease-in-out;
         }
 
-        /* ========== RESPONSIVE ========== */
+        /* ========== RESPONSIVE DESIGN ========== */
         @media (max-width: 768px) {
             .header-nav {
                 flex-direction: column;
                 gap: 1rem;
-            }
-
-            .nav-links {
-                display: none;
             }
 
             .container {
@@ -580,23 +604,18 @@
                 flex-direction: column;
                 align-items: flex-start;
             }
+
+            .selected-service-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
         }
     </style>
-
-    <script>
-        /* Theme initialization */
-        (function () {
-            const saved = localStorage.getItem("theme");
-            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-            if ((saved === "dark") || (!saved && prefersDark)) {
-                document.documentElement.classList.add("dark");
-            }
-        })();
-    </script>
 </head>
 <body>
 
-<!-- ========== ENHANCED HEADER ========== -->
+<!-- ========== HEADER ========== -->
 <header class="header">
     <nav class="header-nav">
         <a href="/home" class="logo">
@@ -606,6 +625,12 @@
 
         <div class="header-actions">
             <button id="themeBtn" class="theme-toggle" type="button" aria-label="Toggle theme">🌗</button>
+
+            <c:if test="${not empty dbStatus}">
+                <div class="p-2 rounded-md bg-gray-100 text-gray-800 font-semibold">
+                        ${dbStatus}
+                </div>
+            </c:if>
 
             <c:if test="${not empty sessionScope.USER}">
                 <div class="user-info">
@@ -626,6 +651,7 @@
 
 <!-- ========== MAIN CONTENT ========== -->
 <main class="container">
+    <!-- Success Alert -->
     <c:if test="${not empty msg}">
         <div class="alert success fade-in">
             <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
@@ -635,15 +661,18 @@
         </div>
     </c:if>
 
-    <!-- Create Order Form -->
+    <!-- Create Order Form Card -->
     <div class="form-card fade-in">
         <h2>
             <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 6H6.28l-.31-1.243A1 1 0 005 4H3z"/>
+                <path d="M16 16a2 2 0 11-4 0 2 2 0 014 0zM4 12a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
             Create New Order
         </h2>
+
         <form action="/orders" method="post" id="orderForm">
+            <!-- Order Details Section -->
             <div class="form-grid">
                 <div class="form-group">
                     <label for="customerUsername">Customer Username *</label>
@@ -668,7 +697,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="orderDate">Order Date</label>
+                    <label for="orderDate">Order Date *</label>
                     <input type="datetime-local" id="orderDate" name="orderDate" class="form-control" required>
                 </div>
 
@@ -678,7 +707,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="deliveryDate">Delivery Date</label>
+                    <label for="deliveryDate">Delivery Date *</label>
                     <input type="datetime-local" id="deliveryDate" name="deliveryDate" class="form-control" required>
                     <small id="dateError" style="color: red; display: none;">
                         🚫 Delivery Date cannot be earlier than Order Date!
@@ -690,57 +719,63 @@
                     <input type="text" id="instructions" name="instructions" class="form-control" placeholder="Any special handling instructions...">
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary" id="submitBtn">
-                <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
-                </svg>
-                Create Order
-            </button>
+
+            <!-- Service Selection Section -->
+            <div style="border-top: 2px solid rgb(var(--border)); padding-top: 2rem; margin-top: 2rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: rgb(var(--primary));">
+                    📦 Add Services
+                </h3>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="serviceId">Service</label>
+                        <select id="serviceId" class="form-control">
+                            <option value="">Select a service</option>
+                            <c:forEach var="service" items="${services}">
+                                <option value="${service.serviceItemId}">
+                                        ${service.serviceName} - Rs. ${service.unitPrice}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" class="form-control" min="1" value="1" required>
+                    </div>
+                </div>
+
+                <button type="button" id="addServiceBtn" class="btn btn-secondary btn-sm">
+                    ➕ Add Service
+                </button>
+            </div>
+
+            <!-- Selected Services Display -->
+            <div style="border-top: 2px solid rgb(var(--border)); padding-top: 2rem; margin-top: 2rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: rgb(var(--primary));">
+                    ✅ Selected Services
+                </h3>
+                <div id="selectedServices" class="space-y-2"></div>
+                <div id="noServicesMessage" class="no-services-message">
+                    <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📋</div>
+                    <div style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">No services selected yet</div>
+                    <div style="font-size: 0.875rem;">Add services using the form above</div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
+                    <svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                    </svg>
+                    Create Order
+                </button>
+            </div>
         </form>
     </div>
 
-    <script>
-        function validateDates() {
-            const orderDateInput = document.getElementById("orderDate");
-            const deliveryDateInput = document.getElementById("deliveryDate");
-            const errorMsg = document.getElementById("dateError");
-            const submitBtn = document.getElementById("submitBtn");
-
-            const orderDate = new Date(orderDateInput.value);
-            const deliveryDate = new Date(deliveryDateInput.value);
-
-            // Set min attribute dynamically
-            if (orderDateInput.value) {
-                deliveryDateInput.min = orderDateInput.value;
-            } else {
-                deliveryDateInput.removeAttribute("min");
-            }
-
-            // Validation check
-            if (orderDate && deliveryDate && deliveryDate < orderDate) {
-                errorMsg.style.display = "block";
-                submitBtn.disabled = true;
-                return false;
-            } else {
-                errorMsg.style.display = "none";
-                submitBtn.disabled = false;
-                return true;
-            }
-        }
-
-        // Real-time validation
-        document.getElementById("orderDate").addEventListener("change", validateDates);
-        document.getElementById("deliveryDate").addEventListener("change", validateDates);
-
-        // Validate again on submit
-        document.getElementById("orderForm").addEventListener("submit", function(e) {
-            if (!validateDates()) {
-                e.preventDefault();
-            }
-        });
-    </script>
-
-    <!-- Orders Table -->
+    <!-- Orders Table Card -->
     <div class="table-card fade-in">
         <div class="table-header">
             <h2>
@@ -837,7 +872,7 @@
     </div>
 </main>
 
-<!-- ========== ENHANCED FOOTER ========== -->
+<!-- ========== FOOTER ========== -->
 <footer class="footer">
     <div class="footer-content">
         <span>&copy; 2025 EcoWash.</span>
@@ -845,12 +880,101 @@
     </div>
 </footer>
 
+<!-- ========== JAVASCRIPT ========== -->
 <script>
+    // ========== THEME INITIALIZATION & TOGGLE ==========
+    (function initTheme() {
+        const saved = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if ((saved === "dark") || (!saved && prefersDark)) {
+            document.documentElement.classList.add("dark");
+        }
+    })();
+
+    document.getElementById('themeBtn')?.addEventListener('click', () => {
+        const root = document.documentElement;
+        const isDark = root.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // ========== SERVICE MANAGEMENT ==========
+    const addBtn = document.getElementById('addServiceBtn');
+    const selectedContainer = document.getElementById('selectedServices');
+    const serviceDropdown = document.getElementById('serviceId');
+    const quantityInput = document.getElementById('quantity');
+    let selectedServices = [];
+
+    addBtn.addEventListener('click', () => {
+        const serviceId = serviceDropdown.value.trim();
+        const serviceName = serviceDropdown.options[serviceDropdown.selectedIndex]?.text || '';
+        const quantity = parseInt(quantityInput.value || "1");
+
+        if (!serviceId) {
+            alert("Please select a service first.");
+            return;
+        }
+
+        selectedServices.push({ serviceId, serviceName, quantity });
+
+        const row = document.createElement('div');
+        row.classList.add('selected-service-item');
+        row.innerHTML = `
+            <div>
+                <div class="service-name">${serviceName}</div>
+                <div class="service-quantity">Quantity: ${quantity}</div>
+            </div>
+            <button type="button" class="remove-service-btn remove-service">✖ Remove</button>
+        `;
+        selectedContainer.appendChild(row);
+
+        document.getElementById('noServicesMessage').style.display = 'none';
+        serviceDropdown.value = "";
+        quantityInput.value = 1;
+
+        row.querySelector('.remove-service').addEventListener('click', () => {
+            selectedServices = selectedServices.filter(s => !(s.serviceId === serviceId && s.quantity === quantity));
+            row.remove();
+            if (selectedServices.length === 0)
+                document.getElementById('noServicesMessage').style.display = 'block';
+        });
+    });
+
+    // ========== DATE VALIDATION ==========
+    function validateDates() {
+        const orderDateInput = document.getElementById("orderDate");
+        const deliveryDateInput = document.getElementById("deliveryDate");
+        const errorMsg = document.getElementById("dateError");
+        const submitBtn = document.getElementById("submitBtn");
+
+        const orderDate = new Date(orderDateInput.value);
+        const deliveryDate = new Date(deliveryDateInput.value);
+
+        if (orderDateInput.value) {
+            deliveryDateInput.min = orderDateInput.value;
+        } else {
+            deliveryDateInput.removeAttribute("min");
+        }
+
+        if (orderDate && deliveryDate && deliveryDate < orderDate) {
+            errorMsg.style.display = "block";
+            submitBtn.disabled = true;
+            return false;
+        } else {
+            errorMsg.style.display = "none";
+            submitBtn.disabled = false;
+            return true;
+        }
+    }
+
+    document.getElementById("orderDate").addEventListener("change", validateDates);
+    document.getElementById("deliveryDate").addEventListener("change", validateDates);
+
+    // ========== FORM SUBMISSION ==========
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('orderForm');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Default order date to now
+        // Set default order date to now
         const orderDateInput = document.getElementById('orderDate');
         if (orderDateInput && !orderDateInput.value) {
             const now = new Date();
@@ -858,14 +982,47 @@
             orderDateInput.value = now.toISOString().slice(0, 16);
         }
 
-        // Form submission handling
-        form.addEventListener('submit', function() {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!validateDates()) {
+                e.preventDefault();
+                return;
+            }
+
+            if (!selectedServices || selectedServices.length === 0) {
+                alert('⚠️ Please add at least one service item.');
+                return;
+            }
+
+            const formData = new FormData(form);
+            selectedServices.forEach(s => {
+                formData.append("serviceIds", s.serviceId);
+                formData.append(`quantity_${s.serviceId}`, s.quantity);
+            });
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<div class="loading"></div> Creating Order...';
-            setTimeout(() => {
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert("✅ Order created successfully!");
+                    window.location.reload();
+                } else {
+                    alert("❌ Failed to create order. Server error.");
+                }
+            } catch (err) {
+                console.error("❌ Network error:", err);
+                alert("⚠️ Could not connect to server.");
+            } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg> Create Order`;
-            }, 3000);
+                submitBtn.innerHTML = '<svg width="18" height="18" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/></svg> Create Order';
+            }
         });
 
         // Auto-dismiss alerts
@@ -883,28 +1040,20 @@
         });
     });
 
-    // Theme toggle
-    document.getElementById('themeBtn')?.addEventListener('click', () => {
-        const root = document.documentElement;
-        const isDark = root.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    });
-
-    // Confirm delete
+    // ========== UTILITY FUNCTIONS ==========
     function confirmDelete(id) {
         return confirm(`🗑️ Delete order #${id}? This cannot be undone.`);
     }
 
-    // Refresh table
     function refreshTable() {
-        const btn = event.target;
+        const btn = event.target.closest('button');
         const orig = btn.innerHTML;
         btn.innerHTML = '<div class="loading"></div> Refreshing...';
         btn.disabled = true;
         setTimeout(() => window.location.reload(), 500);
     }
 
-    // Smooth scrolling
+    // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             const href = this.getAttribute('href');

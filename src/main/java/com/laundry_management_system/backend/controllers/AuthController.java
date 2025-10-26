@@ -11,17 +11,21 @@ import java.util.Optional;
 
 @Controller
 public class AuthController {
-    private final AuthService auth;
-    public AuthController(AuthService auth) { this.auth = auth; }
 
-    // Home page is accessible to anyone
+    private final AuthService auth;
+
+    public AuthController(AuthService auth) {
+        this.auth = auth;
+    }
+
+    // Public home page
     @GetMapping("/")
     public String homePage() {
         return "home";
     }
 
     @GetMapping("/login")
-    public String loginPage(@RequestParam(value="error", required=false) String error, Model model) {
+    public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         model.addAttribute("error", error != null);
         return "login";
     }
@@ -33,25 +37,32 @@ public class AuthController {
         Optional<UserAccount> user = auth.authenticate(username, password);
 
         if (user.isPresent()) {
-            // Store use
-            session.setAttribute("USER", user.get());
+            UserAccount ua = user.get();
+            session.setAttribute("USER", ua);
 
-            // Check first letter restriction for orders page
-            char first = Character.toUpperCase(username.charAt(0));
-            if (first == 'A' || first == 'E') {
-                return "redirect:/orders";
-            } else {
-                // Allowed to login but not access orders
-                return "redirect:/?notAllowed";
+            // Identify user type by prefix
+            char prefix = Character.toUpperCase(username.charAt(0));
+
+            switch (prefix) {
+                case 'A':
+                    return "redirect:/admin-dashboard";
+                case 'E':
+                    return "redirect:/employee-dashboard";
+                case 'C':
+                    return "redirect:/customer-dashboard";
+                default:
+                    // Unknown prefix → redirect to home
+                    return "redirect:/home";
             }
         }
+
+        // Login failed
         return "redirect:/login?error=1";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // clear session
-        return "redirect:/login?logout"; // back to login page
+        return "redirect:/login?logout";
     }
-
 }

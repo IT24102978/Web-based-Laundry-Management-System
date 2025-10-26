@@ -102,6 +102,82 @@
             background: var(--very-light-blue);
             transform: translateY(-2px);
         }
+        
+        /* Service Items Styling */
+        .service-section {
+            background: var(--very-light-blue);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid var(--light-blue);
+            margin: 1.5rem 0;
+        }
+        
+        .service-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1rem;
+            align-items: end;
+        }
+        
+        .selected-service-item {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .selected-service-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        }
+        
+        .service-name {
+            font-weight: 600;
+            color: #1e40af;
+            font-size: 1rem;
+        }
+        
+        .service-quantity {
+            color: #475569;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        
+        .remove-service-btn {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .remove-service-btn:hover {
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            transform: scale(1.05);
+        }
+        
+        .form-control {
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px var(--light-blue);
+        }
     </style>
 </head>
 <body>
@@ -153,8 +229,45 @@
                 <textarea name="instructions" rows="3">${order.instructions}</textarea>
             </label>
 
+            <!-- Service Items Section -->
+            <div class="service-section">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem; font-size: 1.25rem;">Service Items</h3>
+                
+                <div class="service-selection">
+                    <label>Select Service:
+                        <select id="serviceId" class="form-control">
+                            <option value="">Select a service</option>
+                            <c:forEach var="service" items="${services}">
+                                <option value="${service.serviceItemId}">
+                                    ${service.serviceName} - Rs. ${service.unitPrice}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </label>
+
+                    <label>Quantity:
+                        <input type="number" id="quantity" class="form-control" min="1" value="1" required>
+                    </label>
+
+                    <button type="button" id="addServiceBtn" class="btn btn-secondary" style="margin-top: 1rem;">
+                        ➕ Add Service
+                    </button>
+                </div>
+
+                <!-- Selected Services Display -->
+                <div class="selected-services" style="margin-top: 1.5rem;">
+                    <h4 style="color: var(--gray-700); margin-bottom: 1rem;">Selected Services</h4>
+                    <div id="selectedServices" class="space-y-2"></div>
+                    <div id="noServicesMessage" class="no-services-message" style="background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border: 2px dashed #cbd5e1; border-radius: 0.75rem; padding: 2rem; text-align: center; color: #64748b; font-style: italic;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">📋</div>
+                        <div style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.25rem;">No services selected yet</div>
+                        <div style="font-size: 0.875rem;">Add services using the form above</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="actions">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     <c:choose>
                         <c:when test="${mode=='edit'}">Save</c:when>
                         <c:otherwise>Create</c:otherwise>
@@ -164,5 +277,169 @@
             </div>
         </form>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addBtn = document.getElementById('addServiceBtn');
+        const selectedContainer = document.getElementById('selectedServices');
+        const serviceDropdown = document.getElementById('serviceId');
+        const quantityInput = document.getElementById('quantity');
+        const form = document.querySelector('form');
+        const submitBtn = document.getElementById('submitBtn');
+        let selectedServices = []; // In-memory list of selected services
+
+        // Load existing services for edit mode
+        <c:if test="${mode=='edit' && not empty order.items}">
+            <c:forEach var="item" items="${order.items}">
+                // Extract JSP values first
+                const serviceId = '${item.serviceItem.serviceItemId}';
+                const serviceName = '${item.serviceItem.serviceName}';
+                const quantity = ${item.quantity};
+                
+                selectedServices.push({
+                    serviceId: serviceId,
+                    serviceName: serviceName,
+                    quantity: quantity
+                });
+                
+                // Display existing service
+                const row = document.createElement('div');
+                row.classList.add('selected-service-item');
+                row.innerHTML = `
+                    <div style="flex: 1;">
+                        <div class="service-name">` + serviceName + `</div>
+                        <div class="service-quantity">Quantity: ` + quantity + `</div>
+                    </div>
+                    <button type="button" class="remove-service-btn remove-service">✖ Remove</button>
+                `;
+                selectedContainer.appendChild(row);
+                
+                // Add remove functionality
+                row.querySelector('.remove-service').addEventListener('click', () => {
+                    selectedServices = selectedServices.filter(s => !(s.serviceId === serviceId && s.quantity === quantity));
+                    row.remove();
+                    if (selectedServices.length === 0)
+                        document.getElementById('noServicesMessage').style.display = 'block';
+                });
+            </c:forEach>
+            
+            // Hide no services message if we have existing services
+            if (selectedServices.length > 0) {
+                document.getElementById('noServicesMessage').style.display = 'none';
+            }
+        </c:if>
+
+        addBtn.addEventListener('click', () => {
+            const serviceId = serviceDropdown.value.trim();
+            const serviceName = serviceDropdown.options[serviceDropdown.selectedIndex]?.text || '';
+            const quantity = parseInt(quantityInput.value || "1");
+
+            if (!serviceId) {
+                alert("Please select a service first.");
+                return;
+            }
+
+            console.log('🔍 DEBUG: Adding service - ID:', serviceId, 'Name:', serviceName, 'Qty:', quantity);
+
+            // Add to memory
+            selectedServices.push({ serviceId, serviceName, quantity });
+
+            // Visually display
+            const row = document.createElement('div');
+            row.classList.add('selected-service-item');
+            row.innerHTML = `
+                <div style="flex: 1;">
+                    <div class="service-name">` + serviceName + `</div>
+                    <div class="service-quantity">Quantity: ` + quantity + `</div>
+                </div>
+                <button type="button" class="remove-service-btn remove-service">✖ Remove</button>
+            `;
+            selectedContainer.appendChild(row);
+
+            document.getElementById('noServicesMessage').style.display = 'none';
+            serviceDropdown.value = "";
+            quantityInput.value = 1;
+
+            // Remove functionality
+            row.querySelector('.remove-service').addEventListener('click', () => {
+                selectedServices = selectedServices.filter(s => !(s.serviceId === serviceId && s.quantity === quantity));
+                row.remove();
+                if (selectedServices.length === 0)
+                    document.getElementById('noServicesMessage').style.display = 'block';
+            });
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop normal browser submit
+
+            if (!selectedServices || selectedServices.length === 0) {
+                alert('⚠️ Please add at least one service item.');
+                return;
+            }
+
+            const formData = new FormData(form);
+            selectedServices.forEach(s => {
+                formData.append("serviceIds", s.serviceId);
+                formData.append("quantity_" + s.serviceId, s.quantity);
+            });
+
+            console.log("🧩 Submitting FormData:");
+            for (let [k,v] of formData.entries()) console.log(k + ": " + v);
+
+            submitBtn.disabled = true;
+            <c:choose>
+                <c:when test="${mode=='edit'}">
+                    submitBtn.innerHTML = 'Saving...';
+                </c:when>
+                <c:otherwise>
+                    submitBtn.innerHTML = 'Creating...';
+                </c:otherwise>
+            </c:choose>
+
+            try {
+                const response = await fetch(form.action, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    <c:choose>
+                        <c:when test="${mode=='edit'}">
+                            alert("✅ Order updated successfully!");
+                        </c:when>
+                        <c:otherwise>
+                            alert("✅ Order created successfully!");
+                        </c:otherwise>
+                    </c:choose>
+                    window.location.href = '/orders';
+                } else {
+                    <c:choose>
+                        <c:when test="${mode=='edit'}">
+                            alert("❌ Failed to update order. Server error.");
+                        </c:when>
+                        <c:otherwise>
+                            alert("❌ Failed to create order. Server error.");
+                        </c:otherwise>
+                    </c:choose>
+                }
+            } catch (err) {
+                console.error("❌ Network error:", err);
+                alert("⚠️ Could not connect to server.");
+            } finally {
+                submitBtn.disabled = false;
+                <c:choose>
+                    <c:when test="${mode=='edit'}">
+                        submitBtn.innerHTML = 'Save';
+                    </c:when>
+                    <c:otherwise>
+                        submitBtn.innerHTML = 'Create';
+                    </c:otherwise>
+                </c:choose>
+            }
+        });
+    });
+</script>
+
 </body>
 </html>

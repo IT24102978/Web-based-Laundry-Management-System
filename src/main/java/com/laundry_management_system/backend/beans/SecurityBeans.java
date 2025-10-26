@@ -1,3 +1,4 @@
+/*
 package com.laundry_management_system.backend.beans;
 
 import org.springframework.context.annotation.Bean;
@@ -12,3 +13,4 @@ public class SecurityBeans {
         return new BCryptPasswordEncoder();
     }
 }
+*/
