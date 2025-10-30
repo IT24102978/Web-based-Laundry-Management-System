@@ -11,13 +11,23 @@ import java.util.Optional;
 
 @Controller
 public class AuthController {
+
     private final AuthService auth;
-    public AuthController(AuthService auth) { this.auth = auth; }
+
+    public AuthController(AuthService auth) {
+        this.auth = auth;
+    }
+
+    // Public home page
+    @GetMapping("/")
+    public String homePage() {
+        return "home";
+    }
 
     @GetMapping("/login")
-    public String loginPage(@RequestParam(value="error", required=false) String error, Model model) {
+    public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         model.addAttribute("error", error != null);
-        return "login";  // resolves to /WEB-INF/jsp/login.jsp
+        return "login";
     }
 
     @PostMapping("/login")
@@ -25,10 +35,34 @@ public class AuthController {
                           @RequestParam String password,
                           HttpSession session) {
         Optional<UserAccount> user = auth.authenticate(username, password);
+
         if (user.isPresent()) {
-            session.setAttribute("USER", user.get());
-            return "redirect:/orders";
+            UserAccount ua = user.get();
+            session.setAttribute("USER", ua);
+
+            // Identify user type by prefix
+            char prefix = Character.toUpperCase(username.charAt(0));
+
+            switch (prefix) {
+                case 'A':
+                    return "redirect:/admin-dashboard";
+                case 'E':
+                    return "redirect:/employee-dashboard";
+                case 'C':
+                    return "redirect:/customer-dashboard";
+                default:
+                    // Unknown prefix → redirect to home
+                    return "redirect:/home";
+            }
         }
+
+        // Login failed
         return "redirect:/login?error=1";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate(); // clear session
+        return "redirect:/login?logout";
     }
 }

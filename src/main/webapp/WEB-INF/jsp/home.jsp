@@ -199,7 +199,7 @@
             </p>
 
             <div class="hero-buttons">
-                <a href="signup.jsp" class="btn btn-primary btn-large">Get started—it's free</a>
+                <a href="/signup" class="btn btn-primary btn-large">Get started—it's free</a>
                 <a href="#services" class="btn btn-outline btn-large">View services</a>
             </div>
 
